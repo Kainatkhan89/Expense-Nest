@@ -215,6 +215,7 @@ nav.menu_items {
   background: #F2A530;
   border: none;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .cancel-btn,

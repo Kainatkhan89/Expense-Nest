@@ -47,18 +47,18 @@
         <input type="hidden" class="form-control" id="id" th:field="*{id}">
         <div class="form-group">
             <label for="fullName">Full Name</label>
-            <input type="text" class="form-control" id="fullName" placeholder="Name" th:field="*{name}" value="${user.name}">
+            <input type="text" class="form-control" id="fullName" placeholder="Name" th:field="*{name}" th:value="${user.name}">
         </div>
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="email@abc.com" disabled readonly th:field="*{email}" value="${user.email}">
+            <input type="email" class="form-control" id="email" placeholder="email@abc.com" disabled readonly th:field="*{email}" th:value="${user.email}">
         </div>
         <div class="form-group">
             <label for="contact">Contact</label>
-            <input type="tel" class="form-control" id="contact" placeholder="1234567890" th:field="*{phoneNumber}" value="${user.phoneNumber}">
+            <input type="tel" class="form-control" id="contact" placeholder="1234567890" th:field="*{phoneNumber}" th:value="${user.phoneNumber}">
         </div>
         <div class="buttons">
-            <button class="cancel-btn" onclick="resetFields()">Cancel</button>
+            <a href="/editCustomerProfile" class="cancel-btn">Cancel</a>
             <button class="save-btn" onclick="saveProfile()">Save</button>
             <!--<button class="reset-password-btn" onclick="redirectToResetPage()">Reset</button>-->
         </div>
@@ -78,17 +78,6 @@
 
 <script>
 
-
-
-  function resetFields() {
-        var name = document.getElementById("name").value;
-        var email = document.getElementById("email").value;
-        var phone = document.getElementById("phone").value;
-
-        document.getElementById("fullName").value = name;
-        document.getElementById("email").value = email;
-        document.getElementById("contact").value = phone;
-    }
 
   function saveProfile() {
     // Perform some validation later
