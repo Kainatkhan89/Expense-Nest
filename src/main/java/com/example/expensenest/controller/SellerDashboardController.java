@@ -91,4 +91,52 @@ public class SellerDashboardController {
         model.addAttribute("products", productService.searchProductsByQuery(Integer.valueOf(categoryId), queryString));
         return "categoryProducts";
     }
+
+    @GetMapping("/seller/invoices")
+    public String getAllInvoices (HttpServletRequest request, HttpSession session, Model model) {
+        User userSession = sessionService.getSession(session);
+        model.addAttribute("invoices", invoiceService.getUserInvoices(userSession.getId()));
+        model.addAttribute("user", userSession);
+        model.addAttribute("archivedState", false);
+        return "allInvoicesSeller";
+    }
+
+    @PostMapping("/seller/invoices")
+    public String searchInvoices (HttpServletRequest request, HttpSession session, Model model, @ModelAttribute("queryString") String queryString) {
+        User userSession = sessionService.getSession(session);
+        model.addAttribute("invoices", invoiceService.getFilteredInvoices(userSession.getId(), queryString));
+        model.addAttribute("user", userSession);
+        model.addAttribute("archivedState", false);
+        return "allInvoicesSeller";
+    }
+    @GetMapping("/seller/archived")
+    public String getArchivedInvoices (HttpServletRequest request, HttpSession session, Model model) {
+        User userSession = sessionService.getSession(session);
+        model.addAttribute("invoices", invoiceService.getUserInvoices(userSession.getId()));
+        model.addAttribute("user", userSession);
+        model.addAttribute("archivedState", true);
+        return "allInvoicesSeller";
+    }
+
+    @PostMapping("/seller/archived")
+    public String searchArchivedInvoices (HttpServletRequest request, HttpSession session, Model model, @ModelAttribute("queryString") String queryString) {
+        User userSession = sessionService.getSession(session);
+        model.addAttribute("invoices", invoiceService.getFilteredInvoices(userSession.getId(), queryString));
+        model.addAttribute("user", userSession);
+        model.addAttribute("archivedState", true);
+        return "allInvoicesSeller";
+    }
+
+    @PostMapping("/seller/archive/{invoiceId}")
+    public String archiveInvoices (@PathVariable(value="invoiceId") String invoiceId, @ModelAttribute("archivedReason") String archivedReason) {
+        invoiceService.updateInvoiceArchiveData(Integer.valueOf(invoiceId), true, archivedReason);
+        return "redirect:/seller/invoices";
+    }
+
+    @PostMapping("/seller/unarchive/{invoiceId}")
+    public String unrachiveInvoices (@PathVariable(value="invoiceId") String invoiceId) {
+        invoiceService.updateInvoiceArchiveData(Integer.valueOf(invoiceId), false, null);
+        return "redirect:/seller/archived";
+    }
+
 }

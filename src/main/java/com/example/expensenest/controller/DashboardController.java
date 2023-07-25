@@ -89,7 +89,7 @@ public class DashboardController {
     @PostMapping("/editProfile")
     public String editProfile () {
 
-        return "editprofile";
+        return "editCustomerProfile";
     }
 
     @PostMapping("/archive/{invoiceId}")

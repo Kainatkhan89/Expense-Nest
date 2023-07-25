@@ -1,0 +1,160 @@
+body {
+    background: #FED89F;
+}
+
+.invoices {
+    font-size: 15px;
+    margin-left: 280px;
+}
+
+.invoices > .card {
+    margin: 5px;
+}
+
+.category, .total, .price, .quantity {
+    font-size: 12px;
+}
+
+.currentDate {
+    display: inline;
+}
+
+.logo {
+    float: right;
+}
+
+.total-div {
+    text-align: right;
+}
+
+.product-header {
+    font-weight: 600;
+}
+
+.invoice-number-date {
+    text-align: right;
+}
+
+.card-header {
+    border-bottom: solid;
+}
+
+.invoice-title {
+    font-weight: 600;
+    top: 35px;
+    position: absolute;
+}
+
+.invoice-actions > img {
+    float: right;
+    margin: 5px;
+}
+
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    padding: 10px 14px;
+    background-color: white;
+    border-top-right-radius: 25px;
+    box-shadow: 1px 0px 5px gray;
+}
+
+nav.menu_items {
+    margin-top: 40px;
+    height: calc(100% - 90px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.menu_items li {
+    list-style: none;
+}
+
+/* .menu_items li a {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    text-decoration: none;
+}
+
+.menu_items li a .link_name {
+    font-size: 1.1em;
+    font-weight: 400;
+} */
+
+.menu_items li a {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    margin-top: 25px;
+    color: black;
+    padding-left: 7px;
+}
+
+.ul li.active{
+    margin-right: 40px;
+    background-color: rgb(242, 193, 102);
+    border-radius: 7px;
+    font-weight: 600;
+}
+
+.menu_items li a:hover{
+ background-color: rgb(242, 193, 102);
+    border-radius: 7px;
+}
+
+.nav_links li a.active {
+    color: #FF0000;
+}
+
+.logout_btn {
+    background-color: rgb(242, 193, 102);
+    padding: 8px;
+    padding-top: 1%;
+    border-radius: 5px;
+    border-color: rgb(242, 193, 102);
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 50px;
+
+}
+
+.search-bar {
+    margin: 5px;
+    padding-right: 40px;
+}
+
+.input-group-btn {
+    height: 98%;
+    background: #fff;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.search-form {
+    width: 100%;
+    display: inherit;
+}
+.search-text {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.archive-btn, .unarchive-btn {
+    background: #F2A530;
+}
+
+.cancel-btn {
+    color: #000000;
+    background: #fff;
+}
+
+.modal-footer {
+    border: none;
+}
