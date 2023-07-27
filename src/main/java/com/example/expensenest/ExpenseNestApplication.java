@@ -35,7 +35,8 @@ public class ExpenseNestApplication implements CommandLineRunner, WebMvcConfigur
     @Override
     public void addInterceptors(InterceptorRegistry interceptorRegistry) {
         interceptorRegistry.addInterceptor(activeSessionManager).addPathPatterns("/signup", "/signin", "/forgotpassword","/signUpSeller");
-        interceptorRegistry.addInterceptor(inActiveSessionManager).addPathPatterns("/dashboard", "/invoices", "/archived", "/editSeller","/productInsights", "/editProfile", "/editCustomerProfile");
+        interceptorRegistry.addInterceptor(inActiveSessionManager).addPathPatterns("/dashboard", "/invoices", "/archived", "/editSeller",
+                "/productInsights", "/editProfile", "/editCustomerProfile", "/seller/dashboard", "/manage/category", "/add/product", "/reports");
     }
 
 }

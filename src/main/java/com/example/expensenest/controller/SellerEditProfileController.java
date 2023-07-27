@@ -50,9 +50,6 @@ public class SellerEditProfileController {
 
         logger.debug("User details from form: {}", user);
 
-        User userSession = sessionService.getSession(session);
-        model.addAttribute("user", userSession);
-
         if (!user.getName().isEmpty() && !user.getPhoneNumber().isEmpty()) {
             boolean saved = userService.setUserProfile(user);
             if (saved) {
@@ -66,6 +63,13 @@ public class SellerEditProfileController {
             logger.error("Name or phone number cannot be empty: {}", user);
             model.addAttribute("errorMessage", "Name and Contact Number cannot be empty.");
         }
+
+        User userSession = sessionService.getSession(session);
+        if(userSession != null) {
+            User userInfo = userService.getUserProfile(userSession.getId());
+            model.addAttribute("user", userInfo);
+        }
+
         return "editProfile";
     }
 }

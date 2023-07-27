@@ -32,15 +32,15 @@ public class EditProfileController {
 
     @PostMapping("/user/edit")
     public String createUser(@ModelAttribute("user") User user, Model model, HttpSession session) {
-        User userSession = sessionService.getSession(session);
-        User userInfo = userService.getUserProfile(userSession.getId());
-        model.addAttribute("user", userInfo);
         if(userService.updateUser(user)){
             model.addAttribute("successMessage", "Changes saved successfully!");
         }
         else{
             model.addAttribute("errorMessage", "Something went wrong.");
         }
+        User userSession = sessionService.getSession(session);
+        User userInfo = userService.getUserProfile(userSession.getId());
+        model.addAttribute("user", userInfo);
         return "/editCustomerProfile";
     }
 }
