@@ -125,16 +125,23 @@
       const nameSpan = document.getElementById(`headerText${insight.id}`);
       const valueSpan = document.getElementById(`headerNumber${insight.id}`);
 
-      // Update the text content of the span tags
-      nameSpan.textContent = insight.name || "";
-      valueSpan.textContent = insight.value;
+      /// Check if the chart is for "Total Sales"
+        if (insight.id === 3) {
+          // Append the "$" sign to the total sales value before updating the text content of the span tags
+          const formattedValue = "$" + insight.value.toFixed(2);
+          valueSpan.textContent = formattedValue;
+        } else {
+          // For other charts, update the text content as usual
+          nameSpan.textContent = insight.name || "";
+          valueSpan.textContent = insight.value;
+        }
 
         //Bind the data received from controller to graphs dynamically for all three
         renderChart( JSON.parse(insight.graphStringX),JSON.parse(insight.graphStringY),  insight.id, insight.typeOfChart);
     }
 
-// Calling the function to draw the graph when the page loads
- drawSalesChart(userInsightsSalesDataList);
+        // Calling the function to draw the graph when the page loads
+         drawSalesChart(userInsightsSalesDataList);
 
     }
   };
