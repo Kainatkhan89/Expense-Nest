@@ -67,7 +67,6 @@ class SignInControllerTest {
 
         when(userService.getUserByEmailAndPassword(signIn)).thenReturn(null);
 
-        // The expected view name should include the error message query parameter
         String expectedViewName = "redirect:/signin?signInMessage=Invalid email or password. Please try again.&isSignInSuccess=error";
 
         String viewName = signInController.checkSignIn(signIn, session);

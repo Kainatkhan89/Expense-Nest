@@ -33,7 +33,7 @@ public class SellerSignUpController {
     }
 
     @PostMapping("/sellersigninpost")
-    public String checkSignIn(@ModelAttribute("sellerSignUp") User signUp) {
+    public String checkSignIn(@ModelAttribute("sellerSignUp") User signUp, Model model) {
         logger.info("Handling POST request for /sellersigninpost");
         logger.debug("Received User data from the form: {}", signUp);
 
@@ -43,8 +43,15 @@ public class SellerSignUpController {
             return "redirect:/signin";
         } else {
             logger.info("New seller added. Sending verification email for email: {}", signUp.getEmail());
-            emailSenderService.sendVerificationEmail(signUp.getEmail(),"Please verify your email","Click the following link to verify your email", code);
-            return "redirect:/signUpSeller";
+            boolean sent = emailSenderService.sendVerificationEmail(signUp.getEmail(),"Please verify your email","Click the following link to verify your email", code);
+            if (sent) {
+                logger.info("Verification email sent: {}", signUp);
+                model.addAttribute("successMessage", "Verification email sent!");
+            } else {
+                logger.error("Error occurred while sending email: {}", signUp);
+                model.addAttribute("errorMessage", "Error occurred while sending email");
+            }
+            return "/signUpSeller";
         }
     }
 }

@@ -74,7 +74,9 @@ public class Products {
                     uploadDir.mkdirs();
                 }
                 File uploadedFile = new File(uploadDir.getAbsolutePath(), file.getOriginalFilename());
-                file.transferTo(uploadedFile);
+                if(!uploadedFile.exists()) {
+                    file.transferTo(uploadedFile);
+                }
                 this.setImage("/images/user-uploads/" + file.getOriginalFilename());
             } catch (IOException e) {
                 e.printStackTrace();

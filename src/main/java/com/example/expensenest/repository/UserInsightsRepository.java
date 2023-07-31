@@ -3,17 +3,19 @@ package com.example.expensenest.repository;
 import com.example.expensenest.entity.UserInsightResponse;
 import com.example.expensenest.entity.UserInsights;
 import com.example.expensenest.entity.UserInsightsSalesData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 public class UserInsightsRepository {
+    private static final Logger logger = LogManager.getLogger(UserInsightsRepository.class);
     private final JdbcTemplate jdbcTemplate;
 
     public UserInsightsRepository(JdbcTemplate jdbcTemplate) {
@@ -23,7 +25,6 @@ public class UserInsightsRepository {
     public UserInsightResponse getUserInsightResponse(int sellerId) {
 
         UserInsightResponse userInsightResponse = new UserInsightResponse();
-
 
         //Category Chart
         var categoryChartData = getCategoryChartData(sellerId);
@@ -82,34 +83,30 @@ public class UserInsightsRepository {
                 userInsights.setValue(longTotalCount);
 
                 int categoryId = (int) row.get("id");
-
-                fetchData = "SELECT" +
-                        "    CONCAT('[', GROUP_CONCAT(day ORDER BY day SEPARATOR ', '), ']') AS days_of_month_list," +
-                        "    CONCAT('[', GROUP_CONCAT(category_count ORDER BY day SEPARATOR ', '), ']') AS category_count_list" +
-                        "   FROM" +
-                        "    (" +
-                        "        SELECT" +
-                        "            DAYOFMONTH(expensenest.receipt.dateOfPurchase) AS day," +
-                        "            COALESCE(COUNT(expensenest.category.id), 0) AS category_count" +
-                        "        FROM" +
-                        "            (" +
-                        "                SELECT" +
-                        "                    DATE_ADD(LAST_DAY(NOW() - INTERVAL 1 MONTH), INTERVAL 1 DAY) AS start_date," +
-                        "                    LAST_DAY(NOW()) AS end_date" +
-                        "            ) AS date_range" +
-                        "        LEFT JOIN expensenest.receipt ON DATE(expensenest.receipt.dateOfPurchase) " +
-                        "        BETWEEN date_range.start_date AND date_range.end_date" +
-                        "        LEFT JOIN expensenest.receiptitems ON receipt.id = expensenest.receiptitems.receiptid" +
-                        "        LEFT JOIN expensenest.products ON expensenest.receiptitems.productid = expensenest.products.id" +
-                        "        LEFT JOIN expensenest.category ON expensenest.products.category = expensenest.category.id" +
-                        "        WHERE  expensenest.category.id = ?" +
-                        "        AND expensenest.receipt.sellerid = ?" +
-                        "        AND expensenest.receipt.isArchived = 0" +
-                        "        GROUP BY" +
-                        "            DAYOFMONTH(expensenest.receipt.dateOfPurchase)" +
-                        "        ORDER BY" +
-                        "            DAYOFMONTH(expensenest.receipt.dateOfPurchase)" +
-                        "    ) AS sales_data;";
+                fetchData="SELECT\n" +
+                        "    CONCAT('[', GROUP_CONCAT(day ORDER BY day SEPARATOR ', '), ']') AS days_of_month_list,\n" +
+                        "    CONCAT('[', GROUP_CONCAT(category_count ORDER BY day SEPARATOR ', '), ']') AS category_count_list\n" +
+                        "FROM\n" +
+                        "    (\n" +
+                        "        SELECT\n" +
+                        "            DAYOFMONTH(receipt.dateOfPurchase) AS day,\n" +
+                        "            COALESCE(COUNT(category.id), 0) AS category_count\n" +
+                        "        FROM\n" +
+                        "            (\n" +
+                        "                SELECT\n" +
+                        "                    DATE_ADD(LAST_DAY(NOW() - INTERVAL 1 MONTH), INTERVAL 1 DAY) AS start_date,\n" +
+                        "                    LAST_DAY(NOW()) AS end_date\n" +
+                        "            ) AS date_range\n" +
+                        "        LEFT JOIN receipt ON DATE(receipt.dateOfPurchase) BETWEEN date_range.start_date AND date_range.end_date\n" +
+                        "        LEFT JOIN receiptitems ON receipt.id = receiptitems.receiptid\n" +
+                        "        LEFT JOIN products ON receiptitems.productid = products.id\n" +
+                        "        LEFT JOIN category ON products.category = category.id\n" +
+                        "        WHERE category.id = ?\n" +
+                        "        AND receipt.sellerid = ?\n" +
+                        "        AND receipt.isArchived = 0\n" +
+                        "        GROUP BY DAYOFMONTH(receipt.dateOfPurchase)\n" +
+                        "        ORDER BY DAYOFMONTH(receipt.dateOfPurchase)\n" +
+                        "    ) AS sales_data;\n";
 
                 resultList = jdbcTemplate.queryForList(fetchData, categoryId, sellerId);
 
@@ -125,7 +122,7 @@ public class UserInsightsRepository {
             }
         }catch (Exception ex)
         {
-var abc = ex;
+            logger.error("An exception occurred while fetching best selling category's data from the database.", ex);
         }
         return null;
     }
@@ -135,8 +132,8 @@ var abc = ex;
         try {
             //Query to get best product
             String fetchData = "SELECT p.id, p.name, SUM(ri.quantity) as totalSum " +
-                    "FROM expensenest.products p " +
-                    "JOIN expensenest.receiptItems ri ON p.id = ri.productid " +
+                    "FROM products p " +
+                    "JOIN receiptItems ri ON p.id = ri.productid " +
                     "INNER JOIN receipt r ON ri.receiptId = r.id " +
                     "WHERE sellerid = ? AND isArchived = 0 " +
                     "GROUP BY p.id, p.name " +
@@ -163,7 +160,7 @@ var abc = ex;
                         "        FROM" +
                         "            (" +
                         "                SELECT" +
-                        "                    DAYOFMONTH(expensenest.receipt.dateOfPurchase) AS day," +
+                        "                    DAYOFMONTH(receipt.dateOfPurchase) AS day," +
                         "                    COALESCE(SUM(quantity), 0) AS sales_count" +
                         "                FROM" +
                         "                    (" +
@@ -171,18 +168,18 @@ var abc = ex;
                         "                            DATE_ADD(LAST_DAY(NOW() - INTERVAL 1 MONTH), INTERVAL 1 DAY) AS start_date," +
                         "                            LAST_DAY(NOW()) AS end_date" +
                         "                    ) AS date_range" +
-                        "                LEFT JOIN expensenest.receipt ON DATE(expensenest.receipt.dateOfPurchase) " +
+                        "                LEFT JOIN receipt ON DATE(receipt.dateOfPurchase) " +
                         "                BETWEEN date_range.start_date AND date_range.end_date" +
-                        "                LEFT JOIN expensenest.receiptitems ON receipt.id = expensenest.receiptitems.receiptid" +
-                        "                LEFT JOIN expensenest.products ON expensenest.receiptitems.productid = expensenest.products.id" +
-                        "                LEFT JOIN expensenest.category ON expensenest.products.category = expensenest.category.id" +
-                        "                WHERE  expensenest.products.id = ?" +
-                        "                AND expensenest.receipt.sellerid = ?" +
-                        "                and expensenest.receipt.isArchived = 0" +
+                        "                LEFT JOIN receiptitems ON receipt.id = receiptitems.receiptid" +
+                        "                LEFT JOIN products ON receiptitems.productid = products.id" +
+                        "                LEFT JOIN category ON products.category = category.id" +
+                        "                WHERE  products.id = ?" +
+                        "                AND receipt.sellerid = ?" +
+                        "                and receipt.isArchived = 0" +
                         "                GROUP BY" +
-                        "                    DAYOFMONTH(expensenest.receipt.dateOfPurchase)" +
+                        "                    DAYOFMONTH(receipt.dateOfPurchase)" +
                         "                ORDER BY" +
-                        "                    DAYOFMONTH(expensenest.receipt.dateOfPurchase)" +
+                        "                    DAYOFMONTH(receipt.dateOfPurchase)" +
                         "            ) AS sales_data";
 
                 resultList = jdbcTemplate.queryForList(fetchData, categoryId, sellerId);
@@ -198,7 +195,7 @@ var abc = ex;
                 return userInsights;
             }
         }catch (Exception ex){
-
+            logger.error("An exception occurred while fetching best product's data from the database.", ex);
         }
         return null;
     }
@@ -207,7 +204,7 @@ var abc = ex;
 
         try {
             //Query to get total sales
-            String fetchData = "SELECT SUM(r.totalAmount) as totalSum FROM expensenest.receipt r WHERE sellerid = ? AND IsArchived = 0";
+            String fetchData = "SELECT SUM(r.totalAmount) as totalSum FROM receipt r WHERE sellerid = ? AND IsArchived = 0";
             List<Map<String, Object>> resultList = jdbcTemplate.queryForList(fetchData, sellerId);
 
             // Print the fetched data for checking
@@ -221,28 +218,26 @@ var abc = ex;
                 double doubleTotalSum = totalSum.doubleValue();
                 userInsights.setValue(doubleTotalSum);
 
-
-
                 fetchData = "SELECT" +
                         "    CONCAT('[', GROUP_CONCAT(day ORDER BY day SEPARATOR ', '), ']') AS days_of_month_list," +
                         "    CONCAT('[', GROUP_CONCAT(sale_amount ORDER BY day SEPARATOR ', '), ']') AS sale_amount_list" +
                         "   FROM" +
                         "    (" +
                         "        SELECT" +
-                        "            DAYOFMONTH(expensenest.receipt.dateOfPurchase) AS day," +
-                        "            COALESCE(SUM(expensenest.receipt.totalAmount), 0) AS sale_amount" +
+                        "            DAYOFMONTH(receipt.dateOfPurchase) AS day," +
+                        "            COALESCE(SUM(receipt.totalAmount), 0) AS sale_amount" +
                         "        FROM" +
                         "            (" +
                         "                SELECT" +
                         "                    DATE_ADD(LAST_DAY(NOW() - INTERVAL 1 MONTH), INTERVAL 1 DAY) AS start_date," +
                         "                    LAST_DAY(NOW()) AS end_date" +
                         "            ) AS date_range" +
-                        "        LEFT JOIN expensenest.receipt ON DATE(expensenest.receipt.dateOfPurchase) " +
+                        "        LEFT JOIN receipt ON DATE(receipt.dateOfPurchase) " +
                         "        BETWEEN date_range.start_date AND date_range.end_date        " +
-                        "        WHERE expensenest.receipt.sellerid = ?" +
-                        "        AND expensenest.receipt.isArchived = 0" +
-                        "        GROUP BY DAYOFMONTH(expensenest.receipt.dateOfPurchase)" +
-                        "        ORDER BY DAYOFMONTH(expensenest.receipt.dateOfPurchase)" +
+                        "        WHERE receipt.sellerid = ?" +
+                        "        AND receipt.isArchived = 0" +
+                        "        GROUP BY DAYOFMONTH(receipt.dateOfPurchase)" +
+                        "        ORDER BY DAYOFMONTH(receipt.dateOfPurchase)" +
                         "    ) AS sales_data;";
 
                 resultList = jdbcTemplate.queryForList(fetchData, sellerId);
@@ -258,12 +253,13 @@ var abc = ex;
                 return userInsights;
             }
         }catch (Exception ex){
-
+            logger.error("An exception occurred while fetching total sales data from the database.", ex);
         }
         return null;
     }
 
-    private List<UserInsightsSalesData> getSalesReportChartData(int sellerId){
+    private List<UserInsightsSalesData> getSalesReportChartData(int sellerId)
+    {
 
         try {
             List<UserInsightsSalesData> response = new ArrayList<UserInsightsSalesData>();
@@ -277,8 +273,8 @@ var abc = ex;
                     "        SELECT" +
                     "            category.id AS category_id," +
                     "            category.name AS category_name," +
-                    "            MONTH(expensenest.receipt.dateOfPurchase) AS month_num," +
-                    "            COALESCE(SUM(expensenest.receipt.totalAmount), 0) AS total_amount" +
+                    "            MONTH(receipt.dateOfPurchase) AS month_num," +
+                    "            COALESCE(SUM(receipt.totalAmount), 0) AS total_amount" +
                     "        FROM" +
                     "            (" +
                     "                SELECT" +
@@ -289,13 +285,13 @@ var abc = ex;
                     "                     UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7" +
                     "                     UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11) AS n" +
                     "            ) AS months" +
-                    "        LEFT JOIN expensenest.receipt ON DATE(expensenest.receipt.dateOfPurchase) BETWEEN months.start_date AND months.end_date" +
-                    "        LEFT JOIN expensenest.receiptitems ON expensenest.receipt.id = expensenest.receiptitems.receiptid" +
-                    "        LEFT JOIN expensenest.products ON expensenest.receiptitems.productid = expensenest.products.id" +
-                    "        LEFT JOIN expensenest.category ON expensenest.products.category = expensenest.category.id" +
-                    "        WHERE expensenest.receipt.sellerid = ?" +
-                    "        GROUP BY category_id, category_name, MONTH(expensenest.receipt.dateOfPurchase)" +
-                    "        ORDER BY category_id, MONTH(expensenest.receipt.dateOfPurchase)" +
+                    "        LEFT JOIN receipt ON DATE(receipt.dateOfPurchase) BETWEEN months.start_date AND months.end_date" +
+                    "        LEFT JOIN receiptitems ON receipt.id = receiptitems.receiptid" +
+                    "        LEFT JOIN products ON receiptitems.productid = products.id" +
+                    "        LEFT JOIN category ON products.category = category.id" +
+                    "        WHERE receipt.sellerid = ?" +
+                    "        GROUP BY category_id, category_name, MONTH(receipt.dateOfPurchase)" +
+                    "        ORDER BY category_id, MONTH(receipt.dateOfPurchase)" +
                     "    ) AS category_data" +
                     "   WHERE category_name IS NOT NULL" +
                     "   GROUP BY category_name;";
@@ -313,7 +309,7 @@ var abc = ex;
             }
             return response;
         }catch (Exception ex){
-            var exc = ex;
+            logger.error("An exception occurred while fetching sales report data from the database.", ex);
         }
         return null;
     }

@@ -56,7 +56,7 @@
                         <li><i class="material-symbols-outlined">
                             waving_hand
                         </i>&nbsp; Hello,
-                            <span class="text" th:text="${userData}"></span>
+                            <span class="text" th:text="${#strings.substring(user.name,0 , 1)}"></span>
                         </li>
                         <li ><a href="/dashboard"><i class="material-symbols-outlined">dashboard</i>&nbsp; Dashboard</a></li>
                         <li><a href="/invoices"><i class="material-symbols-outlined">
@@ -65,7 +65,7 @@
                         <li><a href="/archived"><i class="material-symbols-outlined">
                             archive
                         </i>&nbsp; Archive invoices</a></li>
-                        <li class="active"><a href="/editCustomerProfile"><i class="material-symbols-outlined">
+                        <li><a href="/editCustomerProfile" class="active"><i class="material-symbols-outlined">
                             account_box
                         </i>&nbsp; Edit profile</a></li>
                         <div th:replace="~{logout :: logoutFragment}"></div>

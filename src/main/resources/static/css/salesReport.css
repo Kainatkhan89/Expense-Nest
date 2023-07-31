@@ -76,3 +76,11 @@ margin:1em;
 border: 1px solid black;
 width:100%
 }
+
+.btn-submit {
+    background: #CA6B26;
+    color: #ffffff;
+    height: 50px;
+    width: 50%;
+    margin: auto auto;
+}

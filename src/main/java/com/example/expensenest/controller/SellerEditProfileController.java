@@ -3,7 +3,6 @@ package com.example.expensenest.controller;
 import com.example.expensenest.entity.User;
 import com.example.expensenest.service.SessionService;
 import com.example.expensenest.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,14 +25,13 @@ public class SellerEditProfileController {
     }
 
     @GetMapping("/editSeller")
-    public String getSellerEditProfile(Model model, HttpServletRequest httpServletRequest, HttpSession session) {
+    public String getSellerEditProfile(Model model, HttpSession session) {
         logger.info("Handling GET request for /editSeller");
         User userSession = sessionService.getSession(session);
+        model.addAttribute("user", userSession);
 
-        // Log user details
         logger.debug("User session details: {}", userSession);
 
-        // Log session attributes
         logger.debug("Session attributes: {}", session.getAttributeNames());
 
         User profile = userService.getUserProfile(userSession.getId());
@@ -47,20 +45,31 @@ public class SellerEditProfileController {
     }
 
     @PostMapping("/saveSeller")
-    public String saveProfile(@ModelAttribute("user") User user, Model model) {
+    public String saveProfile(@ModelAttribute("user") User user, Model model, HttpSession session) {
         logger.info("Handling POST request for /saveSeller");
 
-        // Log user details from the form
         logger.debug("User details from form: {}", user);
 
-        boolean saved = userService.setUserProfile(user);
-        if (saved) {
-            logger.info("User profile saved successfully: {}", user);
-            model.addAttribute("successMessage", "Profile saved successfully!");
+        if (!user.getName().isEmpty() && !user.getPhoneNumber().isEmpty()) {
+            boolean saved = userService.setUserProfile(user);
+            if (saved) {
+                logger.info("User profile saved successfully: {}", user);
+                model.addAttribute("successMessage", "Profile saved successfully!");
+            } else {
+                logger.error("Error occurred while saving the profile: {}", user);
+                model.addAttribute("errorMessage", "Error occurred while saving the profile.");
+            }
         } else {
-            logger.error("Error occurred while saving the profile: {}", user);
-            model.addAttribute("errorMessage", "Error occurred while saving the profile.");
+            logger.error("Name or phone number cannot be empty: {}", user);
+            model.addAttribute("errorMessage", "Name and Contact Number cannot be empty.");
         }
+
+        User userSession = sessionService.getSession(session);
+        if(userSession != null) {
+            User userInfo = userService.getUserProfile(userSession.getId());
+            model.addAttribute("user", userInfo);
+        }
+
         return "editProfile";
     }
 }

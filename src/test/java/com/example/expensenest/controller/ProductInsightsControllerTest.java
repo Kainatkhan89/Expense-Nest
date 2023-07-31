@@ -1,20 +1,23 @@
 package com.example.expensenest.controller;
 
-import com.example.expensenest.entity.User;
-import com.example.expensenest.entity.UserInsightResponse;
-import com.example.expensenest.service.SessionService;
-import com.example.expensenest.service.UserInsightsService;
-import com.example.expensenest.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import com.example.expensenest.entity.User;
+import com.example.expensenest.entity.UserInsightResponse;
+import com.example.expensenest.service.SessionService;
+import com.example.expensenest.service.UserInsightsService;
+import com.example.expensenest.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.ui.Model;
 
 class ProductInsightsControllerTest {
 
@@ -43,15 +46,24 @@ class ProductInsightsControllerTest {
 
     @Test
     void testGetSellerEditProfile() {
-        String viewName = productInsightsController.getSellerEditProfile();
+        User userSession = new User();
+        when(sessionService.getSession(session)).thenReturn(userSession);
+
+        Model model = mock(Model.class);
+
+        String viewName = productInsightsController.getSellerEditProfile(session, model);
+
         assertEquals("/productInsights", viewName);
+
+        verify(sessionService, times(1)).getSession(session);
+        verify(model, times(1)).addAttribute(eq("user"), eq(userSession));
     }
+
 
     @Test
     void testGetProductInsights() {
         User userSession = new User();
         userSession.setId(123);
-
         when(request.getSession()).thenReturn(session);
         when(sessionService.getSession(session)).thenReturn(userSession);
 

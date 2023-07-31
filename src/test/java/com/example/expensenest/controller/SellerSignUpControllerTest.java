@@ -45,9 +45,9 @@ class SellerSignUpControllerTest {
         signUp.setEmail("ds.dalvin@gmail.com");
 
         when(userService.addSeller(signUp)).thenReturn("verification_code");
-        String viewName = sellerSignUpController.checkSignIn(signUp);
+        String viewName = sellerSignUpController.checkSignIn(signUp, model);
 
-        assertEquals("redirect:/signUpSeller", viewName);
+        assertEquals("/signUpSeller", viewName);
         verify(emailSenderService, times(1)).sendVerificationEmail(eq("ds.dalvin@gmail.com"), eq("Please verify your email"), eq("Click the following link to verify your email"), eq("verification_code"));
     }
 
@@ -57,7 +57,7 @@ class SellerSignUpControllerTest {
         signUp.setEmail("ds.dalvin@gmail.com");
 
         when(userService.addSeller(signUp)).thenReturn(null);
-        String viewName = sellerSignUpController.checkSignIn(signUp);
+        String viewName = sellerSignUpController.checkSignIn(signUp,model);
 
         assertEquals("redirect:/signin", viewName);
         verify(emailSenderService, never()).sendVerificationEmail(anyString(), anyString(), anyString(), anyString());
@@ -70,7 +70,7 @@ class SellerSignUpControllerTest {
 
         when(userService.addSeller(signUp)).thenReturn(null);
 
-        String viewName = sellerSignUpController.checkSignIn(signUp);
+        String viewName = sellerSignUpController.checkSignIn(signUp,model);
 
         assertEquals("redirect:/signin", viewName);
         verify(emailSenderService, never()).sendVerificationEmail(anyString(), anyString(), anyString(), anyString());
@@ -83,9 +83,9 @@ class SellerSignUpControllerTest {
 
         when(userService.addSeller(signUp)).thenReturn("verification_code");
 
-        String viewName = sellerSignUpController.checkSignIn(signUp);
+        String viewName = sellerSignUpController.checkSignIn(signUp,model);
 
-        assertEquals("redirect:/signUpSeller", viewName);
+        assertEquals("/signUpSeller", viewName);
         verify(emailSenderService, times(1)).sendVerificationEmail(eq("ds.dalvin@gmail.com"), eq("Please verify your email"), eq("Click the following link to verify your email"), eq("verification_code"));
 }
 }

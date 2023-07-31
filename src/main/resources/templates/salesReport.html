@@ -31,12 +31,16 @@
             <nav>
                 <div class="menu_items">
                     <ul class="nav_links">
-                        <li><a href="#"><i class="fas fa-user-circle"></i>&nbsp; Walmart CA.</a></li>
-                        <li><a href="#"><i class="material-symbols-outlined">dashboard</i>&nbsp; Dashboard</a></li>
+                        <li><i class="material-symbols-outlined">
+                            waving_hand
+                        </i>&nbsp; Hello,
+                            <span class="text" th:text="${#strings.substring(user.name,0 , 1)}"></span>
+                        </li>
+                        <li><a href="/seller/dashboard"><i class="material-symbols-outlined">dashboard</i>&nbsp; Dashboard</a></li>
                         <li><a href="#"><i class="material-symbols-outlined">receipt_long</i>&nbsp; All invoices</a></li>
-                        <li><a href="#"><i class="fas fa-cubes"></i>&nbsp; Manage Category</a></li>
-                        <li class="active"><a href="#"><i class="fas fa-chart-bar"></i>&nbsp; Reports</a></li>
-                        <li><a href="#"><i class="fas fa-chart-line"></i>&nbsp; Product Insights</a></li>
+                        <li><a href="/manage/category"><i class="fas fa-cubes"></i>&nbsp; Manage Category</a></li>
+                        <li class="active"><a href="/reports"><i class="fas fa-chart-bar"></i>&nbsp; Reports</a></li>
+                        <li><a href="/productInsights"><i class="fas fa-chart-line"></i>&nbsp; Product Insights</a></li>
                         <li><a href="/editSeller"><i class="material-symbols-outlined">account_box</i>&nbsp; Edit profile</a></li>
                         <div th:replace="~{logout :: logoutFragment}"></div>
                     </ul>
@@ -48,18 +52,19 @@
         <div class="col-md-10 right-section">
             <div class="content">
                 <div class="row">
+
                     <div class="col-md-12">
                         <div class="reportGenerateContainer">
                             <h4>Sales Report ( <span th:text="${report.startDate}"></span> - <span th:text="${report.endDate}"></span> )</h4>
                                         <div class="table-responsive" style="width:100%">
-                                            <table class="table table-lg table-striped">
+                                            <table class="table table-lg table-striped"  id="report">
                                                 <thead>
-                                                <tr>
-                                                    <th scope="col">Product Name</th>
-                                                    <th scope="col">Quantity</th>
-                                                    <th scope="col">Price</th>
-                                                    <th scope="col">TotalAmount</th>
-                                                </tr>
+                                                    <tr>
+                                                        <th scope="col">Product Name</th>
+                                                        <th scope="col">Quantity</th>
+                                                        <th scope="col">Price</th>
+                                                        <th scope="col">Total Amount</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr th:each="data: ${reportData}">
@@ -73,6 +78,7 @@
                                 </div>
                         </div>
                     </div>
+                    <button type="submit" class="btn btn-submit" onclick="ExportToExcel('xlsx')">Download Report</button>
                 </div>
             </div>
         </div>
@@ -80,5 +86,17 @@
 </div>
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script>
+
+   function ExportToExcel(type, fn, dl) {
+       var elt = document.getElementById('report');
+       var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+       return dl ?
+         XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+         XLSX.writeFile(wb, fn || ('SalesReport.' + (type || 'xlsx')));
+    }
+
+</script>
 </body>
 </html>

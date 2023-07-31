@@ -31,7 +31,11 @@
             <nav>
                 <div class="menu_items">
                     <ul class="nav_links">
-                        <li><i class="fas fa-user-circle"></i>&nbsp; Walmart CA.</li>
+                        <li><i class="material-symbols-outlined">
+                            waving_hand
+                        </i>&nbsp; Hello,
+                            <span class="text" th:text="${#strings.substring(user.name,0 , 1)}"></span>
+                        </li>
                         <li><a href="/seller/dashboard"><i class="material-symbols-outlined">dashboard</i>&nbsp; Dashboard</a></li>
                         <li><a href="/seller/invoices"><i class="material-symbols-outlined">receipt_long</i>&nbsp; All invoices</a></li>
                         <li><a href="/manage/category"><i class="fas fa-cubes"></i>&nbsp; Manage Category</a></li>
@@ -58,22 +62,22 @@
                                     <label class="form-label">Start Date</label>
                                     <div class="input-group date" id="startdatepicker">
                                         <input type="date" class="form-control" id="startdate" th:field="*{startDate}"/>
-                                        <span class="input-group-append">
-                                          <span class="input-group-text bg-light d-block">
-                                            <i class="fa fa-calendar"></i>
-                                          </span>
-                                        </span>
+<!--                                        <span class="input-group-append">-->
+<!--                                          <span class="input-group-text bg-light d-block">-->
+<!--                                            <i class="fa fa-calendar"></i>-->
+<!--                                          </span>-->
+<!--                                        </span>-->
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">End Date</label>
                                     <div class="input-group date" id="enddatepicker">
                                         <input type="date" class="form-control" id="enddate" th:field="*{endDate}"/>
-                                        <span class="input-group-append">
-                                          <span class="input-group-text bg-light d-block">
-                                            <i class="fa fa-calendar"></i>
-                                          </span>
-                                        </span>
+<!--                                        <span class="input-group-append">-->
+<!--                                          <span class="input-group-text bg-light d-block">-->
+<!--                                            <i class="fa fa-calendar"></i>-->
+<!--                                          </span>-->
+<!--                                        </span>-->
                                     </div>
                                 </div>
                             </div>

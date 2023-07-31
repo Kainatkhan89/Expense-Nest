@@ -34,7 +34,11 @@
         <div class="menu_items">
           <ul class="nav_links">
 
-            <li><i class="fas fa-user-circle"></i>&nbsp; Walmart CA.</li>
+            <li><i class="material-symbols-outlined">
+              waving_hand
+            </i>&nbsp; Hello,
+              <span class="text" th:text="${#strings.substring(user.name,0 , 1)}"></span>
+            </li>
             <li><a href="/seller/dashboard"><i class="material-symbols-outlined">dashboard</i>&nbsp; Dashboard</a></li>
             <li><a href="/seller/invoices"><i class="material-symbols-outlined">receipt_long</i>&nbsp; All invoices</a></li>
             <li><a href="/manage/category"><i class="fas fa-cubes"></i>&nbsp; Manage Category</a></li>
@@ -97,54 +101,58 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 
- $(document).ready(function () {
-    makeAjaxRequest(); // Call the function on page load to load all charts
+    $(document).ready(function() {
+        makeAjaxRequest(); // Calling the function on page load to load all charts
 
-  });
+    });
 
 //Make an ajax call to fetch the chart's data from controller
 
-  function makeAjaxRequest() {
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/seller-chart-data", true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-        console.log(xhr.responseText);
-      const userInsightsList = JSON.parse(xhr.responseText).userInsightsList;
-      const userInsightsSalesDataList = JSON.parse(xhr.responseText).userInsightsSalesDataList;
+function makeAjaxRequest() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/seller-chart-data", true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText);
+            const userInsightsList = JSON.parse(xhr.responseText).userInsightsList;
+            const userInsightsSalesDataList = JSON.parse(xhr.responseText).userInsightsSalesDataList;
 
-    // Loop through the userInsightsList array and update span tags' text content by ID
+            // Loop through the userInsightsList array and update span tags' text content by ID
 
-    for (let i = 0; i < userInsightsList.length; i++) {
+            for (let i = 0; i < userInsightsList.length; i++) {
 
-      const insight = userInsightsList[i];
-      const nameSpan = document.getElementById(`headerText${insight.id}`);
-      const valueSpan = document.getElementById(`headerNumber${insight.id}`);
+                const insight = userInsightsList[i];
+                const nameSpan = document.getElementById(`headerText${insight.id}`);
+                const valueSpan = document.getElementById(`headerNumber${insight.id}`);
 
-      // Update the text content of the span tags
-      nameSpan.textContent = insight.name || "";
-      valueSpan.textContent = insight.value;
+                /// Check if the chart is for "Total Sales"
+                if (insight.id === 3) {
+                    // Append the "$" sign to the total sales value before updating the text content of the span tags
+                    const formattedValue = "$" + insight.value.toFixed(2);
+                    valueSpan.textContent = formattedValue;
+                } else {
+                    // For other charts, update the text content as usual
+                    nameSpan.textContent = insight.name || "";
+                    valueSpan.textContent = insight.value;
+                }
 
-        //Bind the data received from controller to graphs dynamically for all three
-        renderChart( JSON.parse(insight.graphStringX),JSON.parse(insight.graphStringY),  insight.id, insight.typeOfChart);
-    }
+                //Bind the data received from controller to graphs dynamically for all three
+                renderChart(JSON.parse(insight.graphStringX), JSON.parse(insight.graphStringY), insight.id, insight.typeOfChart);
+            }
 
-// Calling the function to draw the graph when the page loads
- drawSalesChart(userInsightsSalesDataList);
+            // Calling the function to draw the graph when the page loads
+            drawSalesChart(userInsightsSalesDataList);
 
-//drawLineGraph(userInsightsSalesDataList);
-//drawLineGraph();
-
-    }
-  };
-  xhr.send();
+        }
+    };
+    xhr.send();
 }
 
 
 //Function to bind data into the three charts
-  function renderChart(graphDataX, graphLabelY, id, chartLabel) {
+function renderChart(graphDataX, graphLabelY, id, chartLabel) {
 
-    var ctx = document.getElementById('salesChart'+id).getContext('2d');
+    var ctx = document.getElementById('salesChart' + id).getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -177,83 +185,82 @@
 }
 
 function drawSalesChart(userInsightsSalesDataList) {
-      // Function to parse the string representation of arrays into actual arrays
-const parseArray = (str) => JSON.parse(str.replace(/'/g, '"'));
+    // Function to parse the string representation of arrays into actual arrays
+    const parseArray = (str) => JSON.parse(str.replace(/'/g, '"'));
 
-// Extracting unique categories and months
-const categories = [...new Set(userInsightsSalesDataList.map(item => item.name))];
-const months = parseArray(userInsightsSalesDataList[0].month).map(month => {
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  return monthNames[month - 1];
-});
+    // Extracting unique categories and months
+    const categories = [...new Set(userInsightsSalesDataList.map(item => item.name))];
+    const months = parseArray(userInsightsSalesDataList[0].month).map(month => {
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        return monthNames[month - 1];
+    });
 
-// Initialize the sales array with zeros
-const sales = Array.from({ length: categories.length }, () => Array.from({ length: months.length }, () => 0));
+    // Initialize the sales array with zeros
+    const sales = Array.from({
+        length: categories.length
+    }, () => Array.from({
+        length: months.length
+    }, () => 0));
 
-// Fill in the sales data
-userInsightsSalesDataList.forEach(item => {
-  const categoryIndex = categories.indexOf(item.name);
-  const salesData = parseArray(item.data);
-  salesData.forEach((value, index) => {
-    sales[categoryIndex][index] = value;
-  });
-});
+    // Fill in the sales data
+    userInsightsSalesDataList.forEach(item => {
+        const categoryIndex = categories.indexOf(item.name);
+        const salesData = parseArray(item.data);
+        salesData.forEach((value, index) => {
+            sales[categoryIndex][index] = value;
+        });
+    });
 
-// Form the final salesData object
-const salesData = {
-  categories,
-  months,
-  sales,
-};
+    // Form the final salesData object
+    const salesData = {
+        categories,
+        months,
+        sales,
+    };
 
-console.log(salesData);
+    console.log(salesData);
 
-      // Prepare datasets for Chart.js
-      const datasets = salesData.categories.map((category, index) => ({
+    // Prepare datasets for Chart.js
+    const datasets = salesData.categories.map((category, index) => ({
         label: category,
         data: salesData.sales[index],
         borderColor: getRandomColor(), // Function to generate random colors
         fill: false,
-      }));
+    }));
 
-      // Helper function to get a random color
-      function getRandomColor() {
+    // Helper function to get a random color
+    function getRandomColor() {
         return `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.6)`;
-      }
-
-      // Chart.js configuration
-      const config = {
-        type: 'line',
-        data: {
-          labels: salesData.months,
-          datasets: datasets,
-        },
-        options: {
-          responsive: true,
-          title: {
-            display: true,
-            text: 'Monthly Sales by Category',
-          },
-          scales: {
-            y: {
-              title: {
-                display: true,
-                text: 'Sales',
-              },
-            },
-          },
-        },
-      };
-
-      // Create the chart
-      const ctx = document.getElementById('salesChart').getContext('2d');
-      new Chart(ctx, config);
     }
 
-    // Call the function when the document is ready
-    document.addEventListener('DOMContentLoaded', function () {
-      //drawSalesChart();
-    });
+
+    const config = {
+        type: 'line',
+        data: {
+            labels: salesData.months,
+            datasets: datasets,
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Monthly Sales by Category',
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Sales',
+                    },
+                },
+            },
+        },
+    };
+
+    // Create the chart
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    new Chart(ctx, config);
+}
 
 </script>
 </body>

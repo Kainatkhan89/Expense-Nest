@@ -33,7 +33,7 @@
             </i>&nbsp; Hello,
                 <span class="text" th:text="${userData}"></span>
             </li>
-            <li class="active"><a href="/dashboard"><i class="material-symbols-outlined">dashboard</i>&nbsp; Dashboard</a></li>
+            <li><a href="/dashboard" class="active"><i class="material-symbols-outlined">dashboard</i>&nbsp; Dashboard</a></li>
             <li><a href="/invoices"><i class="material-symbols-outlined">
                 receipt_long
             </i>&nbsp; All invoices</a></li>
@@ -53,15 +53,22 @@
     <div class="content">
         <div class="boxes">
             <div class="box box_1">
+                <span class="text">Daily Expense</span>
                 <canvas id="barChart"></canvas>
             </div>
 
             <div class="box box_2">
+                <span class="text">No. of Items Bought</span>
                 <canvas id="lineChart"></canvas>
             </div>
 
             <div class="box box_3">
+                <span class="text">Company-wise Expense</span>
                 <canvas id="pieChart"></canvas>
+            </div>
+
+            <div class="heading">
+                <p class="text">Recent Invoices</p>
             </div>
 
         </div>
@@ -98,9 +105,9 @@
         data: {
             labels: labels,
             datasets: [{
-                label: 'Quantity and Price',
+                label: 'Quantity bought at a specific Price',
                 data: values,
-                borderColor: 'blue',
+                borderColor: 'orange',
                 backgroundColor: 'rgba(0, 0, 255, 0.1)',
                 fill: true
             }]
@@ -124,9 +131,9 @@
         data: {
             labels: date,
             datasets: [{
-                label: 'Total Amount and Date',
+                label: 'Total Amount Spent at a particular Date',
                 data: totalAmount,
-                borderColor: 'blue',
+                borderColor: 'black',
                 backgroundColor: 'rgba(0, 0, 255, 0.1)',
                 fill: true
             }]
@@ -151,9 +158,9 @@
         data: {
             labels: Name,
             datasets: [{
-                label: 'Company and Total Spent',
+                label: 'Total Amount spent on each company',
                 data: sumAmount,
-                borderColor: 'blue',
+                borderColor: 'black',
                 backgroundColor: 'rgba(0, 0, 255, 0.1)',
                 fill: true
             }]

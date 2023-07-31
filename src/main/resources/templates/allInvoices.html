@@ -36,13 +36,13 @@
             <li><i class="material-symbols-outlined">
                 waving_hand
             </i>&nbsp; Hello,
-                <span class="text" th:text="${userData}"></span>
+                <span class="text" th:text="${#strings.substring(user.name,0 , 1)}"></span>
             </li>
             <li><a href="/dashboard"><i class="material-symbols-outlined">dashboard</i>&nbsp; Dashboard</a></li>
-            <li th:classappend="${archivedState} == false ? active : ''"><a href="/invoices"><i class="material-symbols-outlined">
+            <li><a href="/invoices" th:classappend="${archivedState} == false ? active : ''"><i class="material-symbols-outlined">
                 receipt_long
             </i>&nbsp; All invoices</a></li>
-            <li th:classappend="${archivedState} == true ? active : ''"><a href="/archived"><i class="material-symbols-outlined">
+            <li><a href="/archived" th:classappend="${archivedState} == true ? active : ''"><i class="material-symbols-outlined">
                 archive
             </i>&nbsp; Archive invoices</a></li>
             <li><a href="/editCustomerProfile"><i class="material-symbols-outlined">
@@ -193,6 +193,7 @@
         });
 
         $(".download").on("click", function () {
+            window.scrollTo(0,0);
             var htmlContent = this.parentElement.parentElement.parentElement.innerHTML;
             const opt = {
                 margin: 10,

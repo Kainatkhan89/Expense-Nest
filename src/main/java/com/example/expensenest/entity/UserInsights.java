@@ -1,11 +1,6 @@
 package com.example.expensenest.entity;
 
 public class UserInsights {
-    //Id
-    //Name
-    //Value
-    //Type
-    //GraphString
 
     private int id;
     private String name;

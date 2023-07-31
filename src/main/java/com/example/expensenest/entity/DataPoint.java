@@ -9,6 +9,8 @@ public class DataPoint {
     private Date timeStamp;
     private String name;
     private double sumAmount;
+    private int sumSales;
+    private int totalQuantities;
 
     public DataPoint(String label, double value) {
         this.label = label;
@@ -23,6 +25,16 @@ public class DataPoint {
     public DataPoint(String name, Integer sumAmount) {
         this.name = name;
         this.sumAmount = sumAmount;
+    }
+
+    public DataPoint(Date timeStamp, Integer sumSales) {
+        this.timeStamp = timeStamp;
+        this.sumSales = sumSales;
+    }
+
+    public DataPoint(Integer totalQuantities, Integer sumSales) {
+        this.totalQuantities = totalQuantities;
+        this.sumSales = sumSales;
     }
 
     public String getname(){
@@ -47,4 +59,12 @@ public class DataPoint {
     public Date getTimeStamp() {
         return timeStamp;
     }
+
+    public Integer getSumSales(){
+        return sumSales;
+    }
+    public Integer getTotalQuantities(){
+        return totalQuantities;
+    }
+
 }

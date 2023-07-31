@@ -36,7 +36,7 @@ public class ReportController {
         User userInfo = userService.getUserProfile(userSession.getId());
         LocalDate today = LocalDate.now();
         String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
+        model.addAttribute("user", userSession);
         Report report = new Report(formattedDate,formattedDate);
         model.addAttribute("report",report);
         model.addAttribute("userInfo",userInfo);
@@ -46,6 +46,7 @@ public class ReportController {
     @PostMapping("/generateReport")
     public String generateReport(@ModelAttribute("report") Report report,Model model, HttpSession session) {
         User userSession = sessionService.getSession(session);
+        model.addAttribute("user", userSession);
         model.addAttribute("report",report);
         model.addAttribute("reportData",getReportData(userSession.getId(),report.getStartDate(),report.getEndDate()));
         return "salesReport";

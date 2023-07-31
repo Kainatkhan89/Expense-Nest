@@ -110,7 +110,8 @@ nav.menu_items {
 }
 
 .nav_links li a.active {
-    color: #FF0000;
+     background-color: rgb(242, 193, 102);
+        border-radius: 7px;
 }
 
 .logout_btn {

@@ -29,7 +29,9 @@ public class ProductInsightsController {
     }
 
     @GetMapping("/productInsights")
-    public String getSellerEditProfile() {
+    public String getSellerEditProfile(HttpSession session,Model model) {
+        User userSession = sessionService.getSession(session);
+        model.addAttribute("user", userSession);
         logger.info("Handling GET request for /productInsights");
         return "/productInsights";
     }
