@@ -2,11 +2,11 @@ package com.example.expensenest.entity;
 
 import java.util.List;
 
-public class Invoice {
+public class SellerInvoice {
     private int id;
     private int buyerId;
-    private String name;
-    private String email;
+    private String buyerName;
+    private String buyerEmail;
     private int sellerId;
     private double totalAmount;
     private String purchaseDate;
@@ -34,18 +34,18 @@ public class Invoice {
         return sellerId;
     }
 
-    public void setEmail(String email){
-        this.email = email;
+    public void setBuyerEmail(String buyerEmail){
+        this.buyerName = buyerEmail;
     }
-    public String getEmail() {
-        return email;
+    public String getBuyerEmail() {
+        return buyerEmail;
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setBuyerName(String buyerName){
+        this.buyerName = buyerName;
     }
-    public String getName() {
-        return name;
+    public String getBuyerName() {
+        return buyerName;
     }
 
     public void setSellerId(int sellerId) {

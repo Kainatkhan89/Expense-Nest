@@ -31,24 +31,25 @@
                 <div class="menu_items">
                     <ul class="nav_links">
 
-                        <li><i class="fas fa-user-circle"></i>&nbsp; Walmart CA.</li>
-                        <li><a href="/seller/dashboard"><i class="material-symbols-outlined">dashboard</i>&nbsp; Dashboard</a></li>
+                        <li><i class="material-symbols-outlined">
+                            waving_hand
+                        </i>&nbsp; Hello,
+                            <span class="text" th:text="${#strings.substring(user.name,0 , 1)}"></span>
+                        </li>
+                        <li class="active"><a href="/seller/dashboard"><i class="material-symbols-outlined">dashboard</i>&nbsp; Dashboard</a></li>
                         <li><a href="/seller/invoices"><i class="material-symbols-outlined">receipt_long</i>&nbsp; All invoices</a></li>
-                        <li class="active"><a href="/manage/category"><i class="fas fa-cubes"></i>&nbsp; Manage Category</a></li>
+                        <li><a href="/manage/category"><i class="fas fa-cubes"></i>&nbsp; Manage Category</a></li>
                         <li><a href="/reports"><i class="fas fa-chart-bar"></i>&nbsp; Reports</a></li>
                         <li><a href="/productInsights"><i class="fas fa-chart-line"></i>&nbsp; Product Insights</a></li>
                         <li><a href="/editSeller"><i class="material-symbols-outlined">account_box</i>&nbsp; Edit profile</a></li>
-                        <div th:replace="~{logout :: logoutFragment}"></div>
                     </ul>
                 </div>
-
             </nav>
         </div>
-
         <div class="col-md-9 right-section">
             <div class="invoices row" >
                 <div class="search-bar input-group mb-3">
-                    <form class="search-form" th:action="${archivedState} == false ? @{/seller/invoices} : @{/seller/archived}" method="POST">
+                    <form class="search-form" th:action="${archivedState} == false ? @{/seller/invoices} : @{/archived}" method="POST">
                         <input type="text" class="form-control search-text" name="queryString" aria-label="Search invoice" placeholder="Search invoice">
                         <span class="input-group-btn">
                     <button class="btn btn-default" type="submit">
@@ -58,11 +59,110 @@
                     </form>
                 </div>
 
+                <div class="card mb-6" style="max-width: 27rem;" th:each="invoice: ${allInvoices}"
+                     th:if="${invoice.isArchived} == ${archivedState}">
+                    <div class="card-header bg-transparent row">
+                        <div class=" col-sm-12 invoice-actions img-container">
+                            <img class="download" th:classappend="'download-invoice-' + ${invoice.id}" src="/images/download-icon.png" height="15" width="15"/>
+                        </div>
+                        <div class="col-sm-12">
+                            <span class="invoice-title">Invoice</span>
+                            <img class="logo" src="/images/logo.png" height="40" width="40"/>
+                        </div>
+                    </div>
+                    <div class="card-body row">
+                        <div class="col-sm-6">
+                            <b>Billed To</b><br>
+                            <span th:text="${invoice.name}"></span><br>
+                            <span th:text="${invoice.email}"></span>
+                        </div>
+                        <div class="col-sm-6 invoice-number-date">
+                            <b>Invoice No.</b><br>
+                            <span th:text="${invoice.id}"></span><br>
+                            <b>Date</b><br>
+                            <span th:text="${invoice.purchaseDate}"></span><br>
+                        </div>
+                        <hr class="divider">
+                        <div class="row product-header">
+                            <div class="col-sm-4" style="align: center">
+                                Product
+                            </div>
+                            <div class="col-sm-3" style="align: center">
+                                Price
+                            </div>
+                            <div class="col-sm-2" style="align: center">
+                                Qty
+                            </div>
+                            <div class="col-sm-3" style="align: left">
+                                Amount
+                            </div>
+                        </div>
+
+                        <div class="row" th:each="item: ${invoice.items}">
+                            <div class="col-sm-4 ">
+                                <span th:text="${item.product.name}"></span><br>
+                            </div>
+                            <div class="col-sm-3 ">
+                                $<span th:text="${item.product.price}" class="price"></span>
+                            </div>
+                            <div class="col-sm-2 ">
+                                <span th:text="${item.quantity}" class="quantity "></span>
+                            </div>
+                            <div class="col-sm-3 ">
+                                $<span th:text="${item.quantity} * ${item.product.price}" class="total"></span>
+                            </div>
+                            <hr class="divider">
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                            </div>
+                            <div class="col-sm-6 total-div">
+                                <b>SubTotal</b>  $<span class="col-sm-3" th:text="${invoice.totalAmount}"></span><br>
+                                <b>Tax</b>  $<span class="col-sm-3" th:text="${invoice.totalAmount} * 15 / 100"></span>
+                                <hr class="divider">
+                                <b>Invoice Total</b>
+                                $<span class="totalAmount" th:text="${invoice.totalAmount} + (${invoice.totalAmount} * 15 / 100)"></span>
+                            </div>
+                        </div>
+                        <div>
+                            Terms & Conditions*<br>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        <div th:replace="~{logout :: logoutFragment}"></div>
     </div>
 </div>
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+        date = new Date();
+        year = date.getFullYear();
+        month = date.getMonth() + 1;
+        day = date.getDate();
+        document.querySelectorAll(".currentDate").forEach(item => {
+            item.textContent = month + "/" + day + "/" + year;
+        });
+
+        $(".download").on("click", function () {
+            window.scrollTo(0,0);
+            var htmlContent = this.parentElement.parentElement.parentElement.innerHTML;
+            const opt = {
+                margin: 10,
+                filename: 'invoice.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().from(htmlContent).set(opt).save();
+        });
+
+    </script>
+
 </body>
 </html>

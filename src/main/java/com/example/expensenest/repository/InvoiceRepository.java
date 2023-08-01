@@ -1,6 +1,7 @@
 package com.example.expensenest.repository;
 
 import com.example.expensenest.entity.Invoice;
+import com.example.expensenest.entity.SellerInvoice;
 import com.example.expensenest.entity.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,16 +17,20 @@ public class InvoiceRepository {
     private final JdbcTemplate jdbcTemplate;
     private final InvoiceItemsRepository invoiceItemsRepository;
 
+    static boolean isSellerInvoice = false;
+
     public InvoiceRepository(JdbcTemplate jdbcTemplate, InvoiceItemsRepository invoiceItemsRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.invoiceItemsRepository = invoiceItemsRepository;
     }
     public List<Invoice> findAllUserInvoices(int userId) {
+        isSellerInvoice = false;
         String sql = "SELECT * FROM Receipt WHERE userId=" + userId;
         return jdbcTemplate.query(sql, new InvoiceRowMapper(invoiceItemsRepository));
     }
 
     public List<Invoice> getAllUserFilteredInvoices(int userId, String searchString) {
+        isSellerInvoice = false;
         String sql;
         if(searchString.matches("-?\\d+")) {
             sql = "SELECT * FROM Receipt WHERE userId=" + userId +
@@ -44,6 +49,28 @@ public class InvoiceRepository {
         return false;
     }
 
+    public List<Invoice> findSellerInvoices(int sellerId) {
+        isSellerInvoice = true;
+        String sql = "SELECT r.*, u.name, u.email FROM Receipt r inner join User u on r.userId=u.Id WHERE sellerId=" + sellerId;
+        return jdbcTemplate.query(sql, new InvoiceRowMapper(invoiceItemsRepository));
+    }
+
+    public List<Invoice> getSellerFilteredInvoices(int sellerId, String searchString) {
+
+        isSellerInvoice = true;
+        String sql;
+        if(searchString.matches("-?\\d+")) {
+            sql = "SELECT r.*, u.name, u.email FROM Receipt r inner join User u on r.userId=u.Id WHERE sellerId=" + sellerId +
+                    " AND (r.id="+ searchString+ " OR dateOfPurchase LIKE '%"+ searchString +"%' " +
+                    "OR totalAmount LIKE '%"+ searchString +"%' OR LOWER(name) = LOWER('"+ searchString +"') OR email LIKE '%"+ searchString +"%')";
+        } else {
+            sql = "SELECT r.*, u.name, u.email FROM Receipt r inner join User u on r.userId=u.Id WHERE sellerId=" + sellerId +
+                    " AND ( dateOfPurchase LIKE '%"+ searchString +"%' " +
+                    "OR totalAmount LIKE '%"+ searchString +"%' OR LOWER(name) = LOWER('"+ searchString +"') OR email LIKE '%"+ searchString +"%')";
+        }
+        return jdbcTemplate.query(sql, new InvoiceRowMapper(invoiceItemsRepository));
+    }
+
     private static class InvoiceRowMapper implements RowMapper<Invoice> {
 
         final InvoiceItemsRepository invoiceItemsRepository;
@@ -56,6 +83,8 @@ public class InvoiceRepository {
             Invoice invoice = new Invoice();
             invoice.setId(resultSet.getInt("id"));
             invoice.setBuyerId(resultSet.getInt("userId"));
+            invoice.setName(isSellerInvoice?resultSet.getString("name"): "");
+            invoice.setEmail(isSellerInvoice? resultSet.getString("email"): "");
             invoice.setSellerId(resultSet.getInt("sellerId"));
             invoice.setTotalAmount(resultSet.getInt("totalAmount"));
             invoice.setArchived(resultSet.getInt("isArchived") == 1);
@@ -64,5 +93,8 @@ public class InvoiceRepository {
             invoice.setItems(invoiceItemsRepository.findItemsByInvoice(resultSet.getInt("id")));
             return invoice;
         }
+
     }
+
+
 }

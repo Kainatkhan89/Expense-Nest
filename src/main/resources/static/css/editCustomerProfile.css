@@ -71,6 +71,12 @@ ul li:nth-child(5) {
         border-radius: 7px;
 }
 
+.text{
+    font-size: 1.3em;
+    font-weight; 100;
+    justify-content: left;
+}
+
 .logout_btn {
     background-color: rgb(242, 193, 102);
     padding: 8px;

@@ -36,4 +36,16 @@ public class InvoiceServiceImpl implements InvoiceService {
         logger.info("Updating invoices by invoiceId : {}" , invoiceId);
         return invoiceRepository.updateInvoiceArchiveData(invoiceId, isArchived, archiveReason);
     }
+
+    @Override
+    public List<Invoice> getSellerInvoices(int sellerId) {
+        logger.info("Fetching all invoices by sellerId : {}." , sellerId);
+        return invoiceRepository.findSellerInvoices(sellerId);
+    }
+
+    @Override
+    public List<Invoice> getFilteredSellerInvoices(int sellerId, String searchFilter) {
+        logger.info("Fetching all invoices by sellerId : {} and search filter : {}" , sellerId, searchFilter);
+        return invoiceRepository.getSellerFilteredInvoices(sellerId, searchFilter);
+    }
 }

@@ -1,18 +1,29 @@
 body {
     background: #FED89F;
 }
+.right-section {
+    margin-left: 250px;   // keep a margin between navbar and form
+}
 
 .invoices {
     font-size: 15px;
-    margin-left: 280px;
+    margin-left: 5px;
 }
 
 .invoices > .card {
     margin: 5px;
 }
 
+.img-container {
+    max-width: 100%;
+    max-height: 100%;
+}
 .category, .total, .price, .quantity {
     font-size: 12px;
+}
+
+.total, .price, .quantity {
+    text-align: right;
 }
 
 .currentDate {
@@ -50,13 +61,12 @@ body {
     margin: 5px;
 }
 
-
 nav {
     position: fixed;
     top: 0;
     left: 0;
     height: 100%;
-    width: 250px;
+    /*width: 250px;*/
     padding: 10px 14px;
     background-color: white;
     border-top-right-radius: 25px;
@@ -74,18 +84,6 @@ nav.menu_items {
 .menu_items li {
     list-style: none;
 }
-
-/* .menu_items li a {
-    display: flex;
-    align-items: center;
-    height: 30px;
-    text-decoration: none;
-}
-
-.menu_items li a .link_name {
-    font-size: 1.1em;
-    font-weight: 400;
-} */
 
 .menu_items li a {
     height: 30px;
@@ -126,8 +124,7 @@ nav.menu_items {
 }
 
 .search-bar {
-    margin: 5px;
-    padding-right: 40px;
+    margin: 10px -10px;
 }
 
 .input-group-btn {
