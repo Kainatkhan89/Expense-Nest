@@ -10,48 +10,47 @@
     <link href='https://fonts.googleapis.com/css?family=Lexend Deca' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
 <div class="container">
     <nav class="navbar navbar-expand-xl">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/">
             <img src="images/logo.png" alt="Logo" width="30" height="30" class="d-inline-block">
             <span class="p-1">ExpenseNest</span></a>
     </nav>
     <div class="form">
         <h1 class="form-title">Sign In</h1>
-        <div id="signInMessage" class="text-center"></div> 
+        <div id="signInMessage" class="text-center"></div>
 
-        <form action="/signinpost" method="post">
-        <div class="input-group">
-            <span class="input-group-text"><i class="fa-regular fa-envelope"></i></span>
-            <input type="text" class="form-control" id="email" name="email" placeholder="Email" required>
-        </div>
+        <form action="/signinpost" th:object="${userSignIn}" method="post">
 
-        <div class="input-group">
-            <span class="input-group-text"><i class="fa fa-lock"></i></span>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-        </div>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fa-regular fa-envelope"></i></span>
+                <input type="text" class="form-control" id="email" name="email" placeholder="Email" required th:field="*{email}">
+            </div>
 
-        <div class="form-check">
-            <div class="row">
-                <div class="col-5">
-                    <input class="form-check-input checkbox-color" type="checkbox" value="" id="remembercreds">
-                    <label class="form-check-label checkbox-color" for="remembercreds">
-                        Remember me
-                    </label>
-                </div>
-                <div class="col-1"></div>
-                <div class="col-6 float:right forgot-password">
-                    <a href="#">Forgot password? </a>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required th:field="*{password}">
+            </div>
+
+            <div class="form-check">
+                <div class="row">
+                    <div class="col-6"></div>
+                    <div class="col-6 float:right forgot-password">
+                        <a href="/resetPassword">Forgot password? </a> <!-- add a link to forgot password page -->
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <button type="submit" class="btn btn-submit">SIGN IN</button>
+            <button type="submit" class="btn btn-submit">SIGN IN</button>
         </form>
-        <div class="sign-in">
-            <a href="#">New user? Sign Up</a>
+
+        <div class="sign-up text-center">
+            <h6>Don't have an account already?</h6>
+            <div class ="signUpLinks forgot-password">
+                <a href="/signup" id="signUpCusButton">Sign-up as Customer</a>
+                <a href="/signUpSeller" id="signUpBusinessButton">Sign-up as Business</a>
+            </div>
 
         </div>
     </div>
@@ -64,36 +63,48 @@
         crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-      var urlParams = new URLSearchParams(window.location.search);
-      var signInMessage = urlParams.get('signInMessage');
-      var isSignInSuccess = urlParams.get('isSignInSuccess');
+    $(document).ready(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var signInMessage = urlParams.get('signInMessage');
+        var isSignInSuccess = urlParams.get('isSignInSuccess');
 
-      if (signInMessage && isSignInSuccess) {
-        showsignInMessage(signInMessage, isSignInSuccess);
-      }
-
-      function showsignInMessage(signInMessage, type) {
-        var signInMessageDiv = $('#signInMessage');
-        signInMessageDiv.text(signInMessage);
-        signInMessageDiv.addClass('alert');
-
-        if (type === 'success') {
-          signInMessageDiv.addClass('alert-success');
-        } else if (type === 'error') {
-          signInMessageDiv.addClass('alert-danger');
+        if (signInMessage && isSignInSuccess) {
+            showsignInMessage(signInMessage, isSignInSuccess);
         }
 
-        signInMessageDiv.fadeIn(500);
+        function showsignInMessage(signInMessage, type) {
+            var signInMessageDiv = $('#signInMessage');
+            signInMessageDiv.text(signInMessage);
+            signInMessageDiv.addClass('alert');
 
-        setTimeout(function() {
-          signInMessageDiv.fadeOut(500, function() {
-            signInMessageDiv.removeClass('alert');
-            signInMessageDiv.removeClass('alert-success');
-            signInMessageDiv.removeClass('alert-danger');
-          });
-        }, 5000);
-      }
+            if (type === 'success') {
+                signInMessageDiv.addClass('alert-success');
+            } else if (type === 'error') {
+                signInMessageDiv.addClass('alert-danger');
+            }
+
+            signInMessageDiv.fadeIn(500);
+
+            setTimeout(function () {
+                signInMessageDiv.fadeOut(500, function () {
+                    signInMessageDiv.removeClass('alert');
+                    signInMessageDiv.removeClass('alert-success');
+                    signInMessageDiv.removeClass('alert-danger');
+                });
+            }, 5000);
+        }
+
+        // Handle Sign Up button click
+        $('#signUpButton').click(function () {
+            const selectedRole = $('input[name="userType"]:checked').val();
+
+            if (selectedRole === 'business') {
+                window.location.href = '/signUpSeller';
+            } else if (selectedRole === 'customer') {
+                window.location.href = '/signup';
+            }
+        });
     });
-  </script>
+</script>
 </body>
+</html>

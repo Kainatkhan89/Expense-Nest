@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Profile</title>
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+          crossorigin="anonymous"></script>
+  <link href="/css/edit_profile_seller.css" rel="stylesheet"/>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <link href="/css/logout.css" rel="stylesheet"/>
+
+  <link href='https://fonts.googleapis.com/css?family=Lexend Deca' rel='stylesheet'>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 left-section">
+      <nav>
+        <div class="menu_items">
+          <ul class="nav_links">
+
+            <li><i class="material-symbols-outlined">
+              waving_hand
+            </i>&nbsp; Hello,
+              <span class="text" th:text="${#strings.substring(user.name,0 , 1)}"></span>
+            </li>
+            <li><a href="/seller/dashboard"><i class="material-symbols-outlined">dashboard</i>&nbsp; Dashboard</a></li>
+            <li><a href="#"><i class="material-symbols-outlined">receipt_long</i>&nbsp; All invoices</a></li>
+            <li><a href="/manage/category"><i class="fas fa-cubes"></i>&nbsp; Manage Category</a></li>
+            <li><a href="/reports"><i class="fas fa-chart-bar"></i>&nbsp; Reports</a></li>
+            <li><a href="/productInsights"><i class="fas fa-chart-line"></i>&nbsp; Product Insights</a></li>
+            <li class="active"><a href="/editSeller"><i class="material-symbols-outlined">account_box</i>&nbsp; Edit profile</a></li>
+            <div th:replace="~{logout :: logoutFragment}"></div>
+          </ul>
+        </div>
+
+      </nav>
+    </div>
+
+    <div class="col-md-10 right-section">
+      <div class="content">
+      <div class="boxes">
+        <div class="box box_1">
+
+          <div class="row" style="width: 100%;">
+
+            <div class="col-md-10">
+              <h1>Edit Profile</h1>
+            </div>
+            <div class="col-md-2">
+              <img src="images/seller-logo.png" alt="Logo" class="logo" style="height: 50px">
+            </div>
+
+          </div>
+
+          <div class="row" style="width: 100%;">
+            <div class="col-md">
+
+      <form th:action="@{/saveSeller}" th:object="${user}" method="post">
+        <div class="form-group">
+          <label for="name">Store Name</label>
+          <input type="text" class="form-control" id="name" th:field="*{name}">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control readonly-input" id="email" th:field="*{email}" readonly>
+        </div>
+        <div class="form-group">
+          <label for="phoneNumber">Contact Number</label>
+          <input type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}">
+        </div>
+        <div class="form-group">
+          <label for="companyId">Store ID</label>
+          <input type="text" class="form-control" id="companyId" th:field="*{companyId}">
+        </div>
+        <input type="hidden" class="form-control" id="id" th:field="*{id}">
+        <div class="buttons">
+          <a href="/editSeller" class="cancel-btn">Cancel</a>
+          <button class="save-btn" >Save</button>
+        </div>
+      </form>
+              <div th:if="${successMessage}">
+                <div class="alert alert-success" role="alert">
+                  <span th:text="${successMessage}"></span>
+                </div>
+              </div>
+              <div th:if="${errorMessage}">
+                <div class="alert alert-danger" role="alert">
+                  <span th:text="${errorMessage}"></span>
+                </div>
+              </div>
+</div>
+            </div>
+          </div>
+        </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

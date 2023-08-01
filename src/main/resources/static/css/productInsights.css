@@ -1,0 +1,120 @@
+body {
+    background: #FED89F;
+}
+
+.active {
+    background-color: rgb(242, 193, 102);
+    border-radius: 7px;
+    font-weight: 600;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 10px 14px;
+    background-color: white;
+    border-top-right-radius: 25px;
+    box-shadow: 1px 0px 5px gray;
+}
+
+nav.menu_items {
+    margin-top: 40px;
+    height: calc(100% - 90px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.menu_items li {
+    list-style: none;
+}
+
+.menu_items li a {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    margin-top: 25px;
+    color: black;
+    padding-left: 7px;
+}
+
+.menu_items li a:hover,
+ul li:nth-child(2) {
+    border-radius: 7px;
+}
+
+.content {
+    padding-top: 50px;
+}
+
+.content .boxes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-left: 300px;
+    margin-right: 20px;
+}
+
+.content .boxes .box {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    border-radius: 12px;
+    width: calc(100% / 3 - 10px);
+    padding: 15px 12px;
+    height: 250px;
+    background-color: white;
+}
+
+.content .sales_report {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin-top: 50px;
+    margin-left: 300px;
+    margin-right: 20px;
+    text-align: center;
+}
+
+.content .sales_report .category {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+    box-shadow: 0px 1px 5px gray;
+    border-radius: 12px;
+    background-color: white;
+}
+
+.content .sales_report .category .text {
+    font-size: 24px;
+    padding-left: 20px;
+}
+
+.content .boxes .box .text_light {
+    font-family: revert;
+    font-weight: 80;
+    font-size: 18px;
+}
+
+.content .boxes .box .text{
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.row {
+  margin: 10px 0;
+}
+
+canvas#lineGraphCanvas {
+  width: 800px;
+  height: 500px;
+  margin: auto;
+  display: block;
+  background-color: #e6ecbd
+}
+

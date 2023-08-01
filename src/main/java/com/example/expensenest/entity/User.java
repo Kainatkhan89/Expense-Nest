@@ -5,7 +5,8 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private String isVerfied;
+    private String isVerified;
+    private String verificationCode;
     private int userType;
     private String phoneNumber;
     private int companyId;
@@ -20,12 +21,21 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    public User(String email,String password) {
+        this.password = password;
+        this.email = email;
+    }
+
+    public User(String email) {
+        this.email = email;
+    }
+
     public User(int id, String name, String email, String password, String isVerfied, int userType, String phoneNumber, int companyId) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.isVerfied = isVerfied;
+        this.isVerified = isVerfied;
         this.userType = userType;
         this.phoneNumber = phoneNumber;
         this.companyId = companyId;
@@ -63,12 +73,20 @@ public class User {
         this.email = email;
     }
 
-    public String getIsVerfied() {
-        return isVerfied;
+    public String getIsVerified() {
+        return isVerified;
     }
 
-    public void setIsVerfied(String isVerfied) {
-        this.isVerfied = isVerfied;
+    public void setIsVerified(String isVerified) {
+        this.isVerified = isVerified;
+    }
+
+    public void setVerificationCode(String code) {
+        this.verificationCode = code;
+    }
+
+    public String getVerificationCode() {
+        return this.verificationCode;
     }
 
     public int getUserType() {

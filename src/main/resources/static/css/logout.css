@@ -1,0 +1,25 @@
+#buttonLogOut {
+    background: #CA6B26;
+        color: #ffffff;
+}
+
+#confirmLogOut {
+    background: #CA6B26;
+    color: #ffffff;
+    border-color: black;
+}
+
+#cancelLogOut {
+    border-color: black;
+}
+
+.modal-content  {
+    background: #FED89F;
+    border-color: black;
+    border-width: medium;
+}
+
+.logoutButtonBottom{
+    position: absolute;
+    bottom: 16px;
+    }

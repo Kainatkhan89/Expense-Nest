@@ -42,9 +42,9 @@
                 </li>
                 <!--        Sign In and Sign Up Buttons    -->
                 <div class="m-2">
-                    <form>
-                        <button class="btn btn-orange" type="submit">Sign Up</button>
-                        <button class="btn btn-sign-in" type="submit">Sign In</button>
+                    <form th:action="@{/signup}" method="get">
+                        <!--<button class="btn btn-orange" type="submit">Sign Up</button>-->
+                        <a class="btn btn-sign-in" th:href="@{/signin}">Sign In</a>
                     </form>
                 </div>
             </ul>
@@ -61,8 +61,8 @@
                 <p class="s1-textBody">ExpenseNest helps customers and businesses to access high-quality financial data and manage invoices.</p>
 
                 <form class="customerTypeBtn" >
-                    <button class="btn btn-orange p-2 m-2">Business <i class="fa fa-arrow-right"></i></button>
-                    <button class="btn btn-white p-2 m-2">Customer <i class="fa fa-arrow-right"></i></button>
+                    <a th:href="@{/signUpSeller}" class="btn btn-orange p-2 m-2">Business <i class="fa fa-arrow-right"></i></a>
+                    <a th:href="@{/signup}" class="btn btn-white p-2 m-2">Customer <i class="fa fa-arrow-right"></i></a>
                 </form>
             </div>
 
