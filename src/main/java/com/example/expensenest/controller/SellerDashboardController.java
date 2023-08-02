@@ -61,7 +61,6 @@ public class SellerDashboardController {
         List<Invoice>  newInvoice = invoiceService.getSellerInvoices(userSession.getId());
         model.addAttribute("allInvoices", newInvoice);
         model.addAttribute("user", userSession);
-        model.addAttribute("archivedState", false);
         return "/allInvoicesSeller";
     }
 
@@ -70,7 +69,6 @@ public class SellerDashboardController {
         User userSession = sessionService.getSession(session);
         model.addAttribute("allInvoices", invoiceService.getFilteredSellerInvoices(userSession.getId(), queryString));
         model.addAttribute("user", userSession);
-        model.addAttribute("archivedState", false);
         return "/allInvoicesSeller";
     }
 

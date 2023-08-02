@@ -49,7 +49,7 @@
         <div class="col-md-9 right-section">
             <div class="invoices row" >
                 <div class="search-bar input-group mb-3">
-                    <form class="search-form" th:action="${archivedState} == false ? @{/seller/invoices} : @{/archived}" method="POST">
+                    <form class="search-form" th:action=" @{/seller/invoices}" method="POST">
                         <input type="text" class="form-control search-text" name="queryString" aria-label="Search invoice" placeholder="Search invoice">
                         <span class="input-group-btn">
                     <button class="btn btn-default" type="submit">
@@ -59,10 +59,9 @@
                     </form>
                 </div>
 
-                <div class="card mb-6" style="max-width: 27rem;" th:each="invoice: ${allInvoices}"
-                     th:if="${invoice.isArchived} == ${archivedState}">
+                <div class="card mb-6" style="max-width: 27rem;" th:each="invoice: ${allInvoices}">
                     <div class="card-header bg-transparent row">
-                        <div class=" col-sm-12 invoice-actions img-container">
+                        <div class=" col-sm-12 img-container">
                             <img class="download" th:classappend="'download-invoice-' + ${invoice.id}" src="/images/download-icon.png" height="15" width="15"/>
                         </div>
                         <div class="col-sm-12">
@@ -125,7 +124,7 @@
                             </div>
                         </div>
                         <div>
-                            Terms & Conditions*<br>
+                            Terms & Conditions Applied*<br>
                         </div>
                     </div>
                 </div>

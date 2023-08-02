@@ -14,10 +14,19 @@ body {
     margin: 5px;
 }
 
+
 .img-container {
     max-width: 100%;
     max-height: 100%;
+    cursor: pointer;
 }
+
+.img-container > img {
+    float: right;
+    margin: 5px;
+}
+
+
 .category, .total, .price, .quantity {
     font-size: 12px;
 }
@@ -54,11 +63,6 @@ body {
     font-weight: 600;
     top: 35px;
     position: absolute;
-}
-
-.invoice-actions > img {
-    float: right;
-    margin: 5px;
 }
 
 nav {
