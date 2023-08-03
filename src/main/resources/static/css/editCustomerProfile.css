@@ -1,6 +1,14 @@
-
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.1rem;
+}
 body {
-    background: #FED89F;
+
+ min-height: 100vh;
+ background-color: rgb(242, 193, 102);
 }
 
 nav {
@@ -13,6 +21,7 @@ nav {
     background-color: white;
     border-top-right-radius: 25px;
     box-shadow: 1px 0px 5px gray;
+
 }
 
 nav.menu_items {
@@ -21,10 +30,12 @@ nav.menu_items {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+
 }
 
 .menu_items li {
     list-style: none;
+
 }
 
 .menu_items li a {
@@ -35,6 +46,7 @@ nav.menu_items {
     margin-top: 25px;
     color: black;
     padding-left: 7px;
+
 }
 
 .menu_items li a:hover,
@@ -42,15 +54,45 @@ ul li:nth-child(5) {
     border-radius: 7px;
 }
 
-li a.active {
+.ul li.active{
+    margin-right: 40px;
     background-color: rgb(242, 193, 102);
     border-radius: 7px;
     font-weight: 600;
 }
 
+.menu_items li a:hover{
+ background-color: rgb(242, 193, 102);
+    border-radius: 7px;
+}
+
+.nav_links li a.active {
+     background-color: rgb(242, 193, 102);
+        border-radius: 7px;
+}
+
+.text{
+    font-size: 1.3em;
+    font-weight; 100;
+    justify-content: left;
+}
+
+.logout_btn {
+    background-color: rgb(242, 193, 102);
+    padding: 8px;
+    padding-top: 1%;
+    border-radius: 5px;
+    border-color: rgb(242, 193, 102);
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 50px;
+
+}
+
 .content {
     padding-top: 50px;
 }
+
 .right-section {
     margin-left: 255px;   // keep a margin between navbar and form
 }
@@ -131,4 +173,48 @@ label {
   background: #FF7008;
 }
 
+/* Mobile View */
+@media (max-width: 415px) {
+    nav {
+        width: 100%;
+        padding: 10px;
+        border-top-right-radius: 0;
+        box-shadow: none;
+    }
+
+    .content .boxes, .content .horizontal_boxes {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .content .boxes .box, .content .horizontal_boxes .h_box {
+        width: 100%;
+    }
+}
+
+/* Tablet/iPad view */
+@media (min-width: 768px) and (max-width: 1180px) {
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 250px;
+        padding: 10px 14px;
+        background-color: white;
+        border-top-right-radius: 25px;
+        box-shadow: 1px 0px 5px gray;
+    }
+
+    nav.menu_items {
+        margin-top: 40px;
+        height: calc(100% - 90px);
+    }
+
+    .content .boxes,
+    .content .horizontal_boxes {
+        margin-left: 300px;
+        margin-right: 20px;
+    }
+}
 

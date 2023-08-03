@@ -1,9 +1,6 @@
 package com.example.expensenest.controller;
 
-import com.example.expensenest.entity.Category;
-import com.example.expensenest.entity.DataPoint;
-import com.example.expensenest.entity.Products;
-import com.example.expensenest.entity.User;
+import com.example.expensenest.entity.*;
 import com.example.expensenest.enums.CategoryType;
 import com.example.expensenest.service.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,22 +13,25 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
 public class SellerDashboardController {
 
+    private InvoiceService invoiceService;
     private SessionService sessionService;
     private CategoryService categoryService;
     private ProductService productService;
     private DashboardService sellerdashboardService;
 
-    public SellerDashboardController(DashboardService sellerdashboardService, SessionService sessionService,
+    public SellerDashboardController(InvoiceService invoiceService, DashboardService sellerdashboardService, SessionService sessionService,
                                      CategoryService categoryService, ProductService productService) {
         this.sessionService = sessionService;
         this.categoryService = categoryService;
         this.productService = productService;
         this.sellerdashboardService = sellerdashboardService;
+        this.invoiceService = invoiceService;
     }
 
     @GetMapping("/seller/dashboard")
@@ -53,6 +53,23 @@ public class SellerDashboardController {
         List<DataPoint> yesterdayData = sellerdashboardService.getYesterdayData(sellerId);
         model.addAttribute("yesterdayData", yesterdayData);
         return "sellerDashboard";
+    }
+
+    @GetMapping("/seller/invoices")
+    public String getAllInvoices (HttpServletRequest request, HttpSession session, Model model) {
+        User userSession = sessionService.getSession(session);
+        List<Invoice>  newInvoice = invoiceService.getSellerInvoices(userSession.getId());
+        model.addAttribute("allInvoices", newInvoice);
+        model.addAttribute("user", userSession);
+        return "/allInvoicesSeller";
+    }
+
+    @PostMapping("/seller/invoices")
+    public String searchInvoices (HttpServletRequest request, HttpSession session, Model model, @ModelAttribute("queryString") String queryString) {
+        User userSession = sessionService.getSession(session);
+        model.addAttribute("allInvoices", invoiceService.getFilteredSellerInvoices(userSession.getId(), queryString));
+        model.addAttribute("user", userSession);
+        return "/allInvoicesSeller";
     }
 
     @GetMapping("/manage/category")
@@ -114,4 +131,5 @@ public class SellerDashboardController {
         model.addAttribute("products", productService.searchProductsByQuery(Integer.valueOf(categoryId), queryString));
         return "categoryProducts";
     }
+
 }
